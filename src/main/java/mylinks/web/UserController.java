@@ -1,5 +1,6 @@
 package mylinks.web;
 
+import mylinks.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,22 @@ public class UserController {
 
     @Autowired
     private SecurityService securityService;
+
+    @RequestMapping(value = "/registrationuser", method = RequestMethod.POST)
+    public String registration(Model model, String error, User user) {
+        try {
+            userService.save(user);
+        } catch (Exception e) {
+            return "registration";
+        }
+        return "login";
+    }
+
+
+    @RequestMapping(value = "/registration", method = RequestMethod.POST)
+    public String registration() {
+        return "registration";
+    }
 
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)

@@ -41,7 +41,13 @@
             <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
 
         </div>
+    </form>
 
+    <form  method="POST" action="${contextPath}/registration"  class="form-signin">
+        <div>
+           <h4><button class="btn" type="submit">Registration</button></h4>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        </div>
     </form>
 
 </div>
