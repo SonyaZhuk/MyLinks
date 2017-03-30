@@ -1,9 +1,12 @@
 package mylinks.web;
 
 import mylinks.model.User;
+import mylinks.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import mylinks.service.SecurityService;
@@ -17,22 +20,34 @@ public class UserController {
     @Autowired
     private SecurityService securityService;
 
-    @RequestMapping(value = "/registrationuser", method = RequestMethod.POST)
-    public String registration(Model model, String error, User user) {
-        try {
-            userService.save(user);
-        } catch (Exception e) {
-            return "registration";
-        }
-        return "login";
-    }
+    @Autowired
+    private UserValidator userValidator;
 
+    @RequestMapping(value = "/registration", method = RequestMethod.GET)
+    public String registration(Model model) {
+        model.addAttribute("userForm", new User());
 
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String registration() {
         return "registration";
     }
 
+    @RequestMapping(value = "/registration", method = RequestMethod.POST)
+    public String registration(@ModelAttribute("userForm") User user, BindingResult bindingResult, Model model) {
+        userValidator.validate(user, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return "registration";
+        }
+
+        try {
+            userService.save(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        securityService.autologin(user.getUsername(), user.getPasswordConfirm());
+
+        return "redirect:/welcome";
+    }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model, String error, String logout) {

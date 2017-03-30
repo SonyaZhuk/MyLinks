@@ -10,6 +10,7 @@ public class User {
     private Long id;
     private String username;
     private String password;
+    private String passwordConfirm;
     private String firstname;
     private String surname;
     private String email;
@@ -44,6 +45,15 @@ public class User {
         this.password = password;
     }
 
+    @Transient
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
+
     public String getFirstname() {
         return firstname;
     }
@@ -71,7 +81,6 @@ public class User {
     public int getAge() {
         return age;
     }
-
 
     public void setAge(int age) {
         this.age = age;
