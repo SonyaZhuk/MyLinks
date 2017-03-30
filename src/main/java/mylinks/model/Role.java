@@ -1,6 +1,6 @@
 package mylinks.model;
 
-import mylinks.model.User;
+
 
 import javax.persistence.*;
 import java.util.Set;

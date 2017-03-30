@@ -3,7 +3,9 @@ package mylinks.service;
 
 import mylinks.model.Role;
 import mylinks.model.User;
+import mylinks.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import mylinks.repository.UserRepository;
 
@@ -17,6 +19,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public User findByUsername(String username) {
@@ -39,10 +47,10 @@ public class UserServiceImpl implements UserService {
             if (!user.getPassword().equals(user.getPassword())) {
                 throw new Exception("Password fields are not equals");
             }
-            user.setPassword(user.getPassword());
-//            Set<Role> roleSet = new HashSet<>();
-////            roleSet.add(roleRepository.findByName("user"));
-//            user.setRoles(roleSet);
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            Set<Role> roleSet = new HashSet<>();
+            roleSet.add(roleRepository.getOne(1L));
+            user.setRoles(roleSet);
         }
         return userRepository.save(user);
     }
