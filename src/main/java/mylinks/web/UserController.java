@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import mylinks.service.SecurityService;
 import mylinks.service.UserService;
+import java.security.Principal;
 
 @Controller
 public class UserController {
@@ -61,8 +62,10 @@ public class UserController {
     }
 
     @RequestMapping(value = {"/", "/welcome"}, method = RequestMethod.GET)
-    public String welcome(Model model) {
-
+    public String welcome(Model model, Principal principal) {
+        String name = principal.getName();
+        User currentUser = userService.findByUsername(name);
+        model.addAttribute("currentUser", currentUser);
         return "welcome";
     }
 
